@@ -19,7 +19,6 @@ public class Movement : MonoBehaviour
     void Update()
     {
         GetInputs();
-        IsGrounded();
         Jump();
         Bubble();
     }
@@ -53,15 +52,25 @@ public class Movement : MonoBehaviour
             rb.linearVelocity *= drag;
         }
     }
-    void IsGrounded()
-    {
-        grounded = Physics2D.OverlapAreaAll(groundCheck.bounds.min, groundCheck.bounds.max, groundLayer).Length > 0;
-    }
     void Bubble()
     {
         if (shooting)
         {
             baseFactory.ShootBubbles(transform);
+        }
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == 6)
+        {
+            grounded = true;
+        }
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == 6)
+        {
+            grounded = false;
         }
     }
 }
